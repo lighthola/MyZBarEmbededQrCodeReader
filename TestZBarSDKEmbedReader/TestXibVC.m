@@ -1,56 +1,55 @@
 //
-//  ViewController.m
+//  TestXibVC.m
 //  TestZBarSDKEmbedReader
 //
-//  Created by Bevis Chen on 6/28/16.
+//  Created by Bevis Chen on 6/29/16.
 //  Copyright © 2016 Bevis Chen. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "TestXibVC.h"
+#import "CustomEmbedZBarReader.h"
+#import "ZBarCameraSimulator.h"
 
-
-@interface ViewController ()
+@interface TestXibVC () <ZBarReaderViewDelegate>
 {
-//    __weak IBOutlet ZBarReaderView *readerView;
+    __strong IBOutlet CustomEmbedZBarReader *customEmbedZBarReader;
     __weak IBOutlet UILabel *infoLabel;
     ZBarCameraSimulator *cameraSim;
-    
+    ZBarReaderView *readerView;
 }
-@property (strong, nonatomic) IBOutlet ZBarReaderView *myReaderView;
+
 @end
 
-@implementation ViewController
+@implementation TestXibVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    readerView = customEmbedZBarReader.readerView;
     cameraSim = [[ZBarCameraSimulator alloc] initWithViewController:self];
-    cameraSim.readerView = _myReaderView;
+    cameraSim.readerView = readerView;
     
-    _myReaderView.readerDelegate = self;
-    _myReaderView.torchMode = 0;
-    _myReaderView.tracksSymbols = NO;
-    _myReaderView.trackingColor = [UIColor redColor];
-    [_myReaderView setZoom:0 animated:NO];
-    _myReaderView.allowsPinchZoom = NO;
+    readerView.readerDelegate = self;
+    [customEmbedZBarReader setZBarReaderView];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [_myReaderView start];
+    [readerView start];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
-    [_myReaderView stop];
+    [readerView stop];
 }
 
 #pragma mark - Detect Orientation
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
-//    return UIInterfaceOrientationMaskPortrait|UIInterfaceOrientationMaskLandscape;
+    //    return UIInterfaceOrientationMaskPortrait|UIInterfaceOrientationMaskLandscape;
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
@@ -72,9 +71,9 @@
         NSTimeInterval duration = [coordinator transitionDuration];
         
         // make sure camera Won't rotate
-        _myReaderView.previewTransform = CGAffineTransformIdentity;
+        readerView.previewTransform = CGAffineTransformIdentity;
         // compensate for view rotation so camera preview is not rotated
-        [_myReaderView willRotateToInterfaceOrientation: orient duration: duration];
+        [readerView willRotateToInterfaceOrientation: orient duration: duration];
         
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         // do nothing
@@ -86,9 +85,9 @@
                                  duration: (NSTimeInterval) duration
 {
     // make sure camera Won't rotate
-    _myReaderView.previewTransform = CGAffineTransformIdentity;
+    readerView.previewTransform = CGAffineTransformIdentity;
     // compensate for view rotation so camera preview is not rotated
-    [_myReaderView willRotateToInterfaceOrientation: orient duration: duration];
+    [readerView willRotateToInterfaceOrientation: orient duration: duration];
 }
 
 #pragma mark - ZBarReaderViewDelegate
@@ -105,5 +104,15 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
 
 @end

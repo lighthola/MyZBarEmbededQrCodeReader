@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TestXibVC">
+            <connections>
+                <outlet property="customEmbedZBarReader" destination="lCa-wX-TzN" id="HXW-3Q-jHS"/>
+                <outlet property="infoLabel" destination="j3s-BP-O7e" id="pab-oI-CeQ"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lCa-wX-TzN" customClass="CustomEmbedZBarReader">
+                    <rect key="frame" x="60" y="58" width="480" height="360"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j3s-BP-O7e">
+                    <rect key="frame" x="8" y="563" width="584" height="21"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="1" green="0.29812398130000001" blue="0.27687815640000002" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="bottomMargin" secondItem="j3s-BP-O7e" secondAttribute="bottom" constant="8" id="B0a-jK-LeD"/>
+                <constraint firstItem="j3s-BP-O7e" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leadingMargin" id="LEl-lN-ixu"/>
+                <constraint firstItem="lCa-wX-TzN" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" multiplier="0.6" id="XNg-DR-vnV"/>
+                <constraint firstItem="lCa-wX-TzN" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="bmf-OX-llO"/>
+                <constraint firstItem="lCa-wX-TzN" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="topMargin" constant="50" id="kdt-yN-xv5"/>
+                <constraint firstAttribute="trailingMargin" secondItem="j3s-BP-O7e" secondAttribute="trailing" id="m8a-df-6we"/>
+                <constraint firstItem="lCa-wX-TzN" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" multiplier="0.8" id="oTO-6P-35m"/>
+            </constraints>
+            <point key="canvasLocation" x="311" y="255"/>
+        </view>
+    </objects>
+</document>

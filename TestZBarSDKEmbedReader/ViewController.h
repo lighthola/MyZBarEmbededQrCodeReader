@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZBarCameraSimulator.h"
+#import "ZBarReaderView.h"
+#import "ZBarImageScanner.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <ZBarReaderViewDelegate>
 
 
 @end
