@@ -20,7 +20,7 @@
 
 @interface CustomEmbedZBarReader : UIView <ZBarReaderViewDelegate>
 
-@property (strong, nonatomic) id<CustomEmbedZBarReaderDelegate> delegate;
+@property (weak, nonatomic) id<CustomEmbedZBarReaderDelegate> delegate;
 @property (strong, nonatomic) IBOutlet ZBarReaderView *readerView;
 @property (weak, nonatomic) IBOutlet UIImageView *myImageView;
 
