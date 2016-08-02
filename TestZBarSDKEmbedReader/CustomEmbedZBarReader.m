@@ -22,6 +22,7 @@
     self = [super initWithCoder:coder];
     if (self) {
         [self baseInit];
+        [self setBaseData];
     }
     return self;
 }
@@ -31,12 +32,14 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self baseInit];
+        [self setBaseData];
     }
     return self;
 }
 
--(void)baseInit {
-    
+-(void)baseInit
+{
+    // for xib
     NSArray *views = [[NSBundle mainBundle] loadNibNamed:NSStringFromClass([self class]) owner:self options:nil];
     UIView *view = (UIView*)[views lastObject];
     view.frame = self.bounds;
@@ -44,7 +47,44 @@
     [self addSubview:view];
 }
 
--(void)setZBarReaderView {
+-(void)setBaseData
+{
+    _readerView.readerDelegate = self;
+    
+    // set zbar camera simulator
+    ZBarCameraSimulator *cameraSim = [[ZBarCameraSimulator alloc] initWithViewController:[self viewController]];
+    cameraSim.readerView = _readerView;
+}
+
+#pragma mark - private methods
+- (UIViewController*)viewController
+{
+    for (UIView* next = [self superview]; next; next = next.superview)
+    {
+        UIResponder* nextResponder = [next nextResponder];
+        
+        if ([nextResponder isKindOfClass:[UIViewController class]])
+        {
+            return (UIViewController*)nextResponder;
+        }
+    }
+    
+    return nil;
+}
+
+#pragma mark - public methods
+-(void)start
+{
+    [_readerView start];
+}
+
+-(void)stop
+{
+    [_readerView stop];
+}
+
+-(void)setZBarReaderView
+{
     // 0 off 1 on
     _readerView.torchMode = 0;
     // default yes
@@ -58,13 +98,23 @@
     _readerView.allowsPinchZoom = NO;
 }
 
--(void) setScanRegion {
+-(void)setRotationSupporterWithOrient:(UIInterfaceOrientation)orient duration:(NSTimeInterval)duration
+{
+    // make sure camera Won't rotate
+    _readerView.previewTransform = CGAffineTransformIdentity;
+    // compensate for view rotation so camera preview is not rotated
+    [_readerView willRotateToInterfaceOrientation: orient duration: duration];
+}
+
+-(void)setScanRegionWithImage:(UIImage*)image
+{
+//    UIView *myView = [[UIView alloc] initWithFrame:_myImageView.bounds];
+//    NSLog(@"frame:%@ , bounds:%@",NSStringFromCGRect(_myImageView.frame),NSStringFromCGRect(_myImageView.bounds));
+//    NSLog(@"frame:%@ , bounds:%@",NSStringFromCGRect(_readerView.frame),NSStringFromCGRect(_readerView.bounds));
+//    [_myImageView addSubview:myView];
+//    myView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
     
-    UIView *myView = [[UIView alloc] initWithFrame:_myImageView.bounds];
-    NSLog(@"frame:%@ , bounds:%@",NSStringFromCGRect(_myImageView.frame),NSStringFromCGRect(_myImageView.bounds));
-    NSLog(@"frame:%@ , bounds:%@",NSStringFromCGRect(_readerView.frame),NSStringFromCGRect(_readerView.bounds));
-    [_myImageView addSubview:myView];
-    myView.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
+    _myImageView.image = image;
     
     CGFloat x,y,width,height;
     x = _myImageView.frame.origin.x / _readerView.bounds.size.width;
@@ -76,7 +126,16 @@
     NSLog(@"x:%f , y:%f , width:%f , height:%f",x, y, width, height);
 }
 
-
+#pragma mark - ZBarReaderViewDelegate
+- (void)readerView:(ZBarReaderView *)readerView didReadSymbols:(ZBarSymbolSet *)symbols fromImage:(UIImage *)image {
+    
+    ZBarSymbol* symbol = nil;
+    for (symbol in symbols)
+        break;
+    
+    [_delegate CustomEmbedZBarReader:self didReadText:symbol.data fromImage:image];
+    NSLog(@"%@",symbol.data);
+}
 
 /*
 // Only override drawRect: if you perform custom drawing.

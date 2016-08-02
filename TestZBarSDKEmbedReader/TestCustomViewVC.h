@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "CustomEmbedZBarReader.h"
-#import "ZBarCameraSimulator.h"
 
-@interface TestCustomViewVC : UIViewController <ZBarReaderViewDelegate>
+@interface TestCustomViewVC : UIViewController
 
 @end

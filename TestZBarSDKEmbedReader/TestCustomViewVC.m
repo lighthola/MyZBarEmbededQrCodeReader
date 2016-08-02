@@ -9,13 +9,11 @@
 #import "TestCustomViewVC.h"
 #import "TestXibVC.h"
 
-@interface TestCustomViewVC ()
+@interface TestCustomViewVC () <CustomEmbedZBarReaderDelegate>
 {
     // Have to Strong!!
     __strong IBOutlet CustomEmbedZBarReader *customEmbedZBarReader;
     __weak IBOutlet UILabel *infoLabel;
-    ZBarCameraSimulator *cameraSim;
-    ZBarReaderView *readerView;
 }
 
 @end
@@ -25,11 +23,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    readerView = customEmbedZBarReader.readerView;
-    cameraSim = [[ZBarCameraSimulator alloc] initWithViewController:self];
-    cameraSim.readerView = readerView;
+    customEmbedZBarReader.delegate = self;
     
-    readerView.readerDelegate = self;
     // ZBarReaderView Setting
     [customEmbedZBarReader setZBarReaderView];
 }
@@ -38,19 +33,25 @@
     [super viewDidAppear:animated];
     
     // Set QRcode scan region, this method have to put in viewDidAppear.
-    [customEmbedZBarReader setScanRegion];
-    [readerView start];
+    [customEmbedZBarReader setScanRegionWithImage:[UIImage imageNamed:@"image3"]];
+    [customEmbedZBarReader start];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
-    [readerView stop];
+    [customEmbedZBarReader stop];
 }
 
 - (IBAction)goBtnPressed:(id)sender {
-    TestXibVC *testXibVC = [TestXibVC new];
-    [self.navigationController pushViewController:testXibVC animated:YES];
+//    TestXibVC *testXibVC = [TestXibVC new];
+//    [self.navigationController pushViewController:testXibVC animated:YES];
+    
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:infoLabel.text]];
+//    UIWebView *myWebView = [UIWebView new];
+//    [myWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:infoLabel.text]]];
+//    myWebView.frame = self.view.frame;
+//    [self.view addSubview:myWebView];
 }
 
 
@@ -75,10 +76,8 @@
         UIInterfaceOrientation orient = [[UIApplication sharedApplication] statusBarOrientation];
         NSTimeInterval duration = [coordinator transitionDuration];
 
-        // make sure camera Won't rotate
-        readerView.previewTransform = CGAffineTransformIdentity;
-        // compensate for view rotation so camera preview is not rotated
-        [readerView willRotateToInterfaceOrientation: orient duration: duration];
+        // Rotation Supporter
+        [customEmbedZBarReader setRotationSupporterWithOrient:orient duration:duration];
         
     } completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
         // do nothing
@@ -89,19 +88,14 @@
 - (void) willRotateToInterfaceOrientation: (UIInterfaceOrientation) orient
                                  duration: (NSTimeInterval) duration
 {
-    // make sure camera Won't rotate
-    readerView.previewTransform = CGAffineTransformIdentity;
-    // compensate for view rotation so camera preview is not rotated
-    [readerView willRotateToInterfaceOrientation: orient duration: duration];
+    // Rotation Supporter
+    [customEmbedZBarReader setRotationSupporterWithOrient:orient duration:duration];
 }
 
-#pragma mark - ZBarReaderViewDelegate
-- (void)readerView:(ZBarReaderView *)readerView didReadSymbols:(ZBarSymbolSet *)symbols fromImage:(UIImage *)image {
-    
-    ZBarSymbol* symbol = nil;
-    for (symbol in symbols)
-        break;
-    infoLabel.text = symbol.data;
+#pragma mark - CustomEmbedZBarReaderDelegate
+-(void)CustomEmbedZBarReader:(CustomEmbedZBarReader *)readerView didReadText:(NSString *)text fromImage:(UIImage *)image
+{
+    infoLabel.text = text;
 }
 
 #pragma mark - Others

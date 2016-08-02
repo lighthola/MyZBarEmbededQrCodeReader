@@ -8,12 +8,25 @@
 
 #import <UIKit/UIKit.h>
 #import "ZBarReaderView.h"
+#import "ZBarCameraSimulator.h"
 
-@interface CustomEmbedZBarReader : UIView
+@class CustomEmbedZBarReader;
+@protocol CustomEmbedZBarReaderDelegate <NSObject>
 
+@required
+-(void)CustomEmbedZBarReader:(CustomEmbedZBarReader *)readerView didReadText:(NSString *)text fromImage:(UIImage *)image;
+
+@end
+
+@interface CustomEmbedZBarReader : UIView <ZBarReaderViewDelegate>
+
+@property (strong, nonatomic) id<CustomEmbedZBarReaderDelegate> delegate;
 @property (strong, nonatomic) IBOutlet ZBarReaderView *readerView;
 @property (weak, nonatomic) IBOutlet UIImageView *myImageView;
 
+-(void)start;
+-(void)stop;
 -(void)setZBarReaderView;
--(void)setScanRegion;
+-(void)setRotationSupporterWithOrient:(UIInterfaceOrientation)orient duration:(NSTimeInterval)duration;
+-(void)setScanRegionWithImage:(UIImage*)image;
 @end
